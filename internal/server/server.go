@@ -40,6 +40,8 @@ func Run() error {
 	app.Use(logger.New())
 	app.Use(cors.New())
 
+	
+
 	app.Get("/", handlers.Welcome)
 	app.Get("/room/create", handlers.RoomCreate)
 	app.Get("/room/:uuid", handlers.Room)

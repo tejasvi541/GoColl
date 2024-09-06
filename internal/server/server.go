@@ -12,6 +12,8 @@ import (
 	"github.com/gofiber/template/html"
 	"github.com/gofiber/websocket/v2"
 	"golang.org/x/net/websocket"
+
+	"github.com/tejasvi541/GoColl/internal/handlers"
 )
 
 // Flag values

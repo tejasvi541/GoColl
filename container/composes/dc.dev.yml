@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  server:
+    image: gocoll
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: 512M
+      restart_policy:
+        condition: on-failure
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200m"
+        max-file: "10"
+    ports:
+      - "8080:8080"
+    command: --addr :8080

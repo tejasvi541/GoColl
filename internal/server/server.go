@@ -8,10 +8,8 @@ import (
 	"github.com/gofiber/fiber/middleware/logger"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/gofiber/template/html"
 	"github.com/gofiber/websocket/v2"
-	"golang.org/x/net/websocket"
 
 	"github.com/tejasvi541/GoColl/internal/handlers"
 )
@@ -20,7 +18,7 @@ import (
 
 var (
 	// ServerAddr is the address the server listens on.
-	address = flag.String("address :", os.Getenv("PORT"), "")
+	address = flag.String("addr" + ":", os.Getenv("PORT"), "")
 	cert = flag.String("cert", "", "")
 	key = flag.String("key", "", "")
 )
@@ -52,7 +50,8 @@ func Run() error {
 	app.Get("/room/:uuid/chat/websocket", websocket.New(handlers.RoomChatWebsocket))
 	app.Get("/room/:uuid/viewer/websocket", websocket.New(handlers.RoomViewerWebsocket))
 	app.Get("/stream/:ssuid", handlers.Stream)
-	app.Get("/stream/:ssuid/websocket",)
-	app.Get("/stream/:ssuid/chat",)
-	app.Get("/stream/:ssuid/viewer/websocket",)
+	app.Get("/stream/:ssuid/websocket", websocket.New(handlers.StreamWebsocket, 
+		websocket.Config{HandshakeTimeout: 10 * time.Second}))
+	app.Get("/stream/:ssuid/chat",websocket.New(handlers.StreamChatWebsocket))
+	app.Get("/stream/:ssuid/viewer/websocket",websocket.New(handlers.StreamViewerWebsocket))
 }

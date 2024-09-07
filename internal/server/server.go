@@ -10,8 +10,8 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/template/html"
 	"github.com/gofiber/websocket/v2"
-
 	"github.com/tejasvi541/GoColl/internal/handlers"
+	w "github.com/tejasvi541/GoColl/pkg/webrtc"
 )
 
 // Flag values
@@ -54,4 +54,23 @@ func Run() error {
 		websocket.Config{HandshakeTimeout: 10 * time.Second}))
 	app.Get("/stream/:ssuid/chat",websocket.New(handlers.StreamChatWebsocket))
 	app.Get("/stream/:ssuid/viewer/websocket",websocket.New(handlers.StreamViewerWebsocket))
+	app.Static("/", "./assests")
+
+	w.Rooms = make(map[string]*w.Room)
+	w.Streams = make(map[string]*w.Room)
+
+	go dispatchKeyFrames()
+	if *cert != "" {
+		return app.ListenTLS(*address, *cert, *key)
+	}
+
+	
+}
+
+func dispatchKeyFrames(){
+		for range time.NeWTicker(3 * time.Second).C {
+			for _, room := range w.Rooms {
+				room.Peer.DispatchKeyFrame()
+		}
+	}
 }
